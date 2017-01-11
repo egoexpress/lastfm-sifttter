@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+require 'lastfm'
+require 'date'
+
+configfile = File.expand_path('~/.lastsifttter')
+config = YAML.load_file(configfile)
+
+api_key = config["lastfm"]["api_key"]
+api_secret = config['lastfm']['api_secret']
+
+lastfm = Lastfm.new(api_key, api_secret)
+tracks =  lastfm.user.get_recent_tracks(user: "ego_express")
+
+# for debugging (load)
+# tracks = YAML.load_file('tracks.yaml')
+
+# for debugging (save)
+# File.open("tracks.yaml", "w") do |file|
+#   file.puts YAML::dump(tracks)
+# end
+
+tracks.each { |track|
+  artist =  track['artist']['content']
+  name =  track['name']
+  url = track['url']
+  stringdate = track["date"]["content"]
+
+  date = DateTime.strptime(stringdate, '%d %b %Y, %H:%M')
+
+  puts "@begin #{date.strftime("%B %d %Y, %I:%M%p")}"
+  puts "- [#{artist} - #{name}](#{url})"
+  puts "@end\n\n"
+}
