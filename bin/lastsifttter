@@ -8,9 +8,10 @@ config = YAML.load_file(configfile)
 
 api_key = config["lastfm"]["api_key"]
 api_secret = config['lastfm']['api_secret']
+username = config['lastfm']['username']
 
 lastfm = Lastfm.new(api_key, api_secret)
-tracks =  lastfm.user.get_recent_tracks(user: "ego_express")
+tracks =  lastfm.user.get_recent_tracks(user: username)
 
 # for debugging (load)
 # tracks = YAML.load_file('tracks.yaml')
